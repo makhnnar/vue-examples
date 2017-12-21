@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>COMISIONES</title>
+	<style type="text/css">
+		
+	</style>
+
+	<script src="vue.js"></script>
+    <script src="main-vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+</head>
+<body>
+
+	<div id="app" class="row">
+
+        <div class="col-md-6 col-md-offset-3">
+
+			<h1>Calculo de comisiones de Paypal a Paypal</h1>
+
+            <p v-else>Por favor escribe tu nombre:</p>
+
+            <form>
+
+                <input type="text" v-model="toSend" class="form-control">
+
+                <p v-if="toSend == ''" class="alert alert-danger">
+                    Este campo es obligatorio
+                </p>
+
+            </form>
+
+            <template v-if="toSend">
+
+                <div>
+                	<p>Tu COMISION = {{ calculateComision }}</p>
+                </div>
+
+                <hr>
+                
+                <div>
+                	<p>Lo que recibira el DESTINO = {{ calculateRecieving }} </p>
+                </div>
+
+            </template>
+
+            <hr>
+
+            <pre>{{ $data | json }}</pre>
+        </div>
+    </div>
+
+</body>
+</html>
