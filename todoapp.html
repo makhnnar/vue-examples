@@ -37,7 +37,16 @@
                     border:solid;
                     border-radius:10px;
                     height: 40px;
+                    margin:10px;
                     text-align: center;
+                }
+                .Area{
+                    flex:1;
+                    color:#000000;
+                    border:solid;
+                    border-radius:10px;
+                    height: 100px;
+                    margin:10px;
                 }
                 .List{
                     flex:1;
@@ -68,12 +77,33 @@
 
                 <div class="Columna">
             
-                    <input type="text" v-model="nameTodo" class="Input">
+                    <input 
+                        type="text" 
+                        v-model="nameTodo" 
+                        class="Input"
+                        placeholder="Titulo"
+                    >
 
-                    <input type="text" v-model="descriptionTodo" class="Input">
-
-                    <input type="text" v-model="dateTodo" class="Input">
+                    <input 
+                        type="date" 
+                        v-model="dateTodo" 
+                        class="Input"
+                        placeholder="Fecha"
+                    >
     
+                </div>
+
+                <div class="Columna">
+
+                    <textarea
+                        rows="10" 
+                        cols="50" 
+                        v-model="descriptionTodo"
+                        class="Area"
+                        placeholder="Descripcion"
+                    >
+                    </textarea>
+
                 </div>
 
                 <div class="Columna">
@@ -97,11 +127,23 @@
 
                 <div class="Columna">
 
-                    <button v-on:click="addTodo" class="Btn">Start</button>
+                    <button 
+                        v-on:click="addTodo" 
+                        class="Btn">
+                        Agregar
+                    </button>
 
-                    <button v-on:click="editTodo" class="Btn">Stop</button>
+                    <button 
+                        v-on:click="editTodo" 
+                        class="Btn">
+                        Editar
+                    </button>
 
-                    <button v-on:click="delTodo" class="Btn">Reset</button>
+                    <button 
+                        v-on:click="delTodo" 
+                        class="Btn">
+                        Eliminar
+                    </button>
 
                 </div>
                 
@@ -151,6 +193,9 @@
                                     showIt:false
                                 });
                                 this.countTodos++;
+                                this.nameTodo = '';
+                                this.descriptionTodo = '';
+                                this.dateTodo = '';
                             },
                             delTodo:function(){
                                 this.todos.push({
