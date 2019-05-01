@@ -31,6 +31,17 @@
                 .Spaces{
                     flex:1;
                 }
+                .Input{
+                    flex:1;
+                    color:#000000;
+                    border:solid;
+                    border-radius:10px;
+                    height: 40px;
+                    text-align: center;
+                }
+                .List{
+                    flex:1;
+                }
                 .Alert{
                     display:flex;
                     flex:1;
@@ -56,68 +67,41 @@
             <div id="app" class="Row">
 
                 <div class="Columna">
-
-                    <div class="Spaces">
-
-                    </div>
-
-                    <div class="Result">
-                
-                        <p> 
-                            HORAS
-                        </p>
-
-                        <p> 
-                            {{ showHours<10? '0'+showHours : showHours }}
-                        </p>
-                        
-                    </div>
-
-                    <div class="Spaces">
-
-                    </div>
-
-                    <div class="Result">
             
-                        <p> 
-                            MINUTOS
-                        </p>
+                    <input type="text" v-model="nameTodo" class="Input">
 
-                        <p> 
-                            {{ showMin<10? '0'+showMin : showMin }}
-                        </p>
-                        
-                    </div>
+                    <input type="text" v-model="descriptionTodo" class="Input">
 
-                    <div class="Spaces">
+                    <input type="text" v-model="dateTodo" class="Input">
+    
+                </div>
 
-                    </div>
+                <div class="Columna">
 
-                    <div class="Result">
-        
-                        <p> 
-                            SEGUNDOS
-                        </p>
-
-                        <p> 
-                            {{ showSecs<10? '0'+showSecs : showSecs }}
-                        </p>
-                        
-                    </div>
-
-                    <div class="Spaces">
-
-                    </div>
+                    <ul class="List">
+                        <li 
+                            is="todo-detail"
+                            v-for="(todo, index) in todos"
+                            v-bind:key="todo.id"
+                            v-bind:name="todo.name"
+                            v-bind:description="todo.description"
+                            v-bind:date="todo.date"
+                            v-bind:showit="todo.showIt"
+                            v-on:remove="todos.splice(index, 1)"
+                            v-on:show="showDetail(index)"
+                        >
+                        </li>
+                      </ul>
 
                 </div>
 
                 <div class="Columna">
 
-                    <button v-on:click="initCounter" class="Btn">Start</button>
+                    <button v-on:click="addTodo" class="Btn">Start</button>
 
-                    <button v-on:click="stopCounter" class="Btn">Stop</button>
+                    <button v-on:click="editTodo" class="Btn">Stop</button>
 
-                    <button v-on:click="resetCounter" class="Btn">Reset</button>
+                    <button v-on:click="delTodo" class="Btn">Reset</button>
 
                 </div>
                 
@@ -125,15 +109,32 @@
             </div>
             
                 <script>
-            
+                    
+                    Vue.component('todo-detail', {
+                        template: '\
+                            <li class="List">\
+                            <div class="Columna">\
+                            <p class="List">{{ name }} - {{ date }}</p>\
+                            <button v-on:click="$emit(\'show\')" class="Btn">Show more</button>\
+                            </div>\
+                            <div class="Columna">\
+                            <div v-if="showit == true" class="Alert">\
+                            {{ description }}\
+                            </div>\
+                            </div>\
+                            </li>\
+                        ',
+                        props: ['name','date','showit','description']
+                    })
+
                     new Vue({
                         el: "#app",
                         data: {
-                            counter:null,
-                            showSecs:0,
-                            showMin:0,
-                            showHours:0,
-                            isStared:false
+                            nameTodo:'',
+                            descriptionTodo:'',
+                            dateTodo:'',
+                            todos: [],
+                            countTodos:0
                         },
                         computed: {
                             calculateTransformacion:function () {
@@ -141,40 +142,32 @@
                             }
                         },
                         methods:{
-                            counterFun:function(){
-                                this.showSecs++;
-                                if(this.showSecs>59){
-                                    this.showSecs = 0;
-                                    this.showMin++;
-                                }
-                                if(this.showMin>59){
-                                    this.showMin = 0;
-                                    this.showHours++;
-                                }
+                            addTodo:function(){
+                                this.todos.push({
+                                    id:this.countTodos,
+                                    name:this.nameTodo,
+                                    description:this.descriptionTodo,
+                                    date:this.dateTodo,
+                                    showIt:false
+                                });
+                                this.countTodos++;
                             },
-                            initCounter:function(){
-                                if(!this.isStarted){
-                                    this.isStarted = true;
-                                    this.counter = setInterval(
-                                        this.counterFun, 
-                                        1000
-                                    );
-                                }
+                            delTodo:function(){
+                                this.todos.push({
+                                    name:this.nameTodo,
+                                    description:this.descriptionTodo,
+                                    date:this.dateTodo
+                                });
                             },
-                            stopCounter:function(){
-                                this.isStarted = false;
-                                clearInterval(
-                                    this.counter
-                                )
+                            editTodo:function(){
+                                this.todos.push({
+                                    name:this.nameTodo,
+                                    description:this.descriptionTodo,
+                                    date:this.dateTodo
+                                });
                             },
-                            resetCounter:function(){
-                                this.isStarted = false;
-                                this.showSecs = 0;
-                                this.showMin = 0;
-                                this.showHours = 0;
-                                clearInterval(
-                                    this.counter
-                                )
+                            showDetail:function(pos){
+                                this.todos[pos].showIt = !this.todos[pos].showIt;
                             }
                         }
                     });
