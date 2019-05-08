@@ -213,7 +213,18 @@
                     <modal 
                         v-if="showAddTodo"
                         :todos="todos"
-                        :countTodos="countTodos"
+                        :countTodos="0"
+                        @close="closeAddTodo()">
+    
+                </template>
+
+                <template>
+              
+                    <todo-edit 
+                        v-if="editingPos>=0"
+                        :todos="todos"
+                        :editingPos="editingPos"
+                        :toEdit="toEdit"
                         @close="closeAddTodo()">
     
                 </template>
@@ -312,14 +323,15 @@
                     },
                     methods:{
                         addThisTodo: function(){
+                            let id = this.countTodos;
+                            console.log(id);
                             this.todos.push({
-                                id:this.countTodos,
+                                id:id,
                                 name:this.nameTodo,
                                 description:this.descriptionTodo,
                                 date:this.dateTodo,
                                 showIt:false
                             });
-                            this.countTodos++;
                             this.nameTodo = '';
                             this.descriptionTodo = '';
                             this.dateTodo = '';
@@ -330,6 +342,37 @@
                         }
                     },
                     props:['todos','countTodos']
+                })
+
+                Vue.component('todo-edit', {
+                    template: '#modal-template',
+                    data: function() {
+                        return{
+                            nameTodo:this.toEdit.name,
+                            descriptionTodo:this.toEdit.description,
+                            dateTodo:this.toEdit.date,
+                        }
+                    },
+                    methods:{
+                        addThisTodo: function(){
+                            let toChange = {
+                                id:this.toEdit.id,
+                                name:this.nameTodo,
+                                description:this.descriptionTodo,
+                                date:this.dateTodo,
+                                showIt:this.toEdit.showIt
+                            };
+                            this.todos[this.editingPos] = Object.assign({},toChange);
+                            this.nameTodo = '';
+                            this.descriptionTodo = '';
+                            this.dateTodo = '';
+                            this.$emit('close');
+                        },
+                        closeModal: function(){
+                            this.$emit('close');
+                        }
+                    },
+                    props:['todos','editingPos','toEdit']
                 })
 
                 Vue.component('todo-detail', {
@@ -386,17 +429,21 @@
                             this.showAddTodo = true;
                         },
                         deleteTodo:function(pos){
-                            this.todos.splice(pos, 1)
+                            this.todos.splice(pos, 1);
                         },
                         editTodo:function(pos){
+                            console.log("EDITANDO");
                             this.editingPos = pos;
+                            console.log(this.todos[pos]);
                             this.toEdit = Object.assign({},this.todos[pos]);
+                            console.log(this.toEdit);
                         },
                         showDetail:function(pos){
                             this.todos[pos].showIt = !this.todos[pos].showIt;
                         },
                         closeAddTodo:function(){
                             this.showAddTodo = false;
+                            this.editingPos = -1;
                         }
                     }
                 });
