@@ -96,6 +96,9 @@
                     flex-direction: row;
                     padding: 8px;
                 }
+                .material-icons.md-36{
+                    font-size: 36px;
+                }
                 .Result{
                     display:flex;
                     flex:2;
@@ -169,7 +172,7 @@
 
                 <div class="Columna">
 
-                    <ul class="List">
+                    <ul v-if="todos.length>0" class="List">
                         <li 
                             is="todo-detail"
                             v-for="(todo, index) in todos"
@@ -182,7 +185,12 @@
                             v-on:show="showDetail(index)"
                         >
                         </li>
-                      </ul>
+                    </ul>
+                    <div v-if="todos.length == 0" class="Columna">
+                        <p>
+                            No hay actividades planificadas. Agregue una por favor
+                        </p>
+                    </div>
 
                 </div>
 
@@ -195,18 +203,6 @@
                             add
                         </i>
                     </div>
-
-                    <button 
-                        v-on:click="editTodo" 
-                        class="Btn">
-                        Editar
-                    </button>
-
-                    <button 
-                        v-on:click="delTodo" 
-                        class="Btn">
-                        Eliminar
-                    </button>
 
                 </div>
                 
@@ -337,15 +333,25 @@
                 Vue.component('todo-detail', {
                     template: '\
                         <li class="ItemList">\
-                            <div v-on:click="$emit(\'show\')" class="Columna">\
+                            <div class="Columna">\
                                 <p class="TitleTodo">TITULO: {{ name }}</p>\
                                 <p class="DateTodo">FECHA: {{ date }}</p>\
                                 <div class="Btn">\
-                                    <i v-if="showit == false" class="material-icons">\
-                                        arrow_downward\
+                                    <i id="IconStyle" class="material-icons md-36">\
+                                        clear\
                                     </i>\
-                                    <i v-if="showit == true" class="material-icons">\
-                                        arrow_upward\
+                                </div>\
+                                <div class="Btn">\
+                                    <i id="IconStyle" class="material-icons md-36">\
+                                        create\
+                                    </i>\
+                                </div>\
+                                <div  v-on:click="$emit(\'show\')" class="Btn">\
+                                    <i id="IconStyle" v-if="showit == false" class="material-icons md-36">\
+                                        visibility\
+                                    </i>\
+                                    <i id="IconStyle" v-if="showit == true" class="material-icons md-36">\
+                                        visibility_off\
                                     </i>\
                                 </div>\
                             </div>\
@@ -356,7 +362,7 @@
                             </div>\
                         </li>\
                     ',
-                    props: ['name','date','showit','description','key']
+                    props: ['name','date','showit','description']
                 })
 
                 new Vue({
