@@ -183,6 +183,8 @@
                             v-bind:showit="todo.showIt"
                             v-on:remove="todos.splice(index, 1)"
                             v-on:show="showDetail(index)"
+                            @edit="editTodo(index)"
+                            @delete="deleteTodo(index)"
                         >
                         </li>
                     </ul>
@@ -336,21 +338,21 @@
                             <div class="Columna">\
                                 <p class="TitleTodo">TITULO: {{ name }}</p>\
                                 <p class="DateTodo">FECHA: {{ date }}</p>\
-                                <div class="Btn">\
-                                    <i id="IconStyle" class="material-icons md-36">\
+                                <div v-on:click="$emit(\'delete\') class="Btn">\
+                                    <i class="material-icons md-36">\
                                         clear\
                                     </i>\
                                 </div>\
-                                <div class="Btn">\
-                                    <i id="IconStyle" class="material-icons md-36">\
+                                <div v-on:click="$emit(\'edit\')" class="Btn">\
+                                    <i class="material-icons md-36">\
                                         create\
                                     </i>\
                                 </div>\
-                                <div  v-on:click="$emit(\'show\')" class="Btn">\
-                                    <i id="IconStyle" v-if="showit == false" class="material-icons md-36">\
+                                <div v-on:click="$emit(\'show\')" class="Btn">\
+                                    <i v-if="showit == false" class="material-icons md-36">\
                                         visibility\
                                     </i>\
-                                    <i id="IconStyle" v-if="showit == true" class="material-icons md-36">\
+                                    <i v-if="showit == true" class="material-icons md-36">\
                                         visibility_off\
                                     </i>\
                                 </div>\
@@ -370,7 +372,9 @@
                     data: {
                         showAddTodo:false,
                         todos: [],
-                        countTodos:0
+                        countTodos:0,
+                        editingPos:-1,
+                        toEdit:{}
                     },
                     computed: {
                         calculateTransformacion:function () {
@@ -381,19 +385,12 @@
                         openAddTodo:function(){
                             this.showAddTodo = true;
                         },
-                        delTodo:function(){
-                            this.todos.push({
-                                name:this.nameTodo,
-                                description:this.descriptionTodo,
-                                date:this.dateTodo
-                            });
+                        deleteTodo:function(pos){
+                            this.todos.splice(pos, 1)
                         },
-                        editTodo:function(){
-                            this.todos.push({
-                                name:this.nameTodo,
-                                description:this.descriptionTodo,
-                                date:this.dateTodo
-                            });
+                        editTodo:function(pos){
+                            this.editingPos = pos;
+                            this.toEdit = Object.assign({},this.todos[pos]);
                         },
                         showDetail:function(pos){
                             this.todos[pos].showIt = !this.todos[pos].showIt;
