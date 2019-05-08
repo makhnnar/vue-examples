@@ -172,9 +172,9 @@
 
                 <div class="Columna">
 
-                    <ul v-if="todos.length>0" class="List">
-                        <li 
-                            is="todo-detail"
+                    <div v-if="todos.length>0" class="List">
+                        
+                        <todo-detail 
                             v-for="(todo, index) in todos"
                             v-bind:key="todo.id"
                             v-bind:name="todo.name"
@@ -185,10 +185,11 @@
                             v-on:show="showDetail(index)"
                             @edit="editTodo(index)"
                             @delete="deleteTodo(index)"
-                        >
-                        </li>
-                    </ul>
-                    <div v-if="todos.length == 0" class="Columna">
+                        />
+
+                    </div>
+
+                    <div v-if="todos.length === 0" class="Columna">
                         <p>
                             No hay actividades planificadas. Agregue una por favor
                         </p>
@@ -213,8 +214,8 @@
                     <modal 
                         v-if="showAddTodo"
                         :todos="todos"
-                        :countTodos="0"
-                        @close="closeAddTodo()">
+                        :counttodos="countTodos"
+                        @close="closeAddTodo()"/>
     
                 </template>
 
@@ -223,13 +224,47 @@
                     <todo-edit 
                         v-if="editingPos>=0"
                         :todos="todos"
-                        :editingPos="editingPos"
-                        :toEdit="toEdit"
-                        @close="closeAddTodo()">
+                        :editingpos="editingPos"
+                        :toedit="toEdit"
+                        @close="closeAddTodo()"/>
     
                 </template>
     
             </div>
+
+            <script type="text/x-template" id="item-template">
+      
+                <div class="ItemList">
+                    <div class="Columna">
+                        <p class="TitleTodo">TITULO: {{ name }}</p>
+                        <p class="DateTodo">FECHA: {{ date }}</p>
+                        <div v-on:click="$emit('delete')" class="Btn">
+                            <i class="material-icons md-36">
+                                clear
+                            </i>
+                        </div>
+                        <div v-on:click="$emit('edit')" class="Btn">
+                            <i class="material-icons md-36">
+                                create
+                            </i>
+                        </div>
+                        <div v-on:click="$emit('show')" class="Btn">
+                            <i v-if="showit === false" class="material-icons md-36">
+                                visibility
+                            </i>
+                            <i v-if="showit === true" class="material-icons md-36">
+                                visibility_off
+                            </i>
+                        </div>
+                    </div>
+                    <div class="Columna">
+                        <div v-if="showit === true" class="Alert">
+                            {{ description }}
+                        </div>
+                    </div>
+                </div>
+            
+            </script>
 
             <script type="text/x-template" id="modal-template">
       
@@ -323,7 +358,7 @@
                     },
                     methods:{
                         addThisTodo: function(){
-                            let id = this.countTodos;
+                            let id = this.counttodos;
                             console.log(id);
                             this.todos.push({
                                 id:id,
@@ -336,33 +371,34 @@
                             this.descriptionTodo = '';
                             this.dateTodo = '';
                             this.$emit('close');
+                            this.countTodos++;
                         },
                         closeModal: function(){
                             this.$emit('close');
                         }
                     },
-                    props:['todos','countTodos']
+                    props:['todos','counttodos']
                 })
 
                 Vue.component('todo-edit', {
                     template: '#modal-template',
                     data: function() {
                         return{
-                            nameTodo:this.toEdit.name,
-                            descriptionTodo:this.toEdit.description,
-                            dateTodo:this.toEdit.date,
+                            nameTodo:this.toedit.name,
+                            descriptionTodo:this.toedit.description,
+                            dateTodo:this.toedit.date,
                         }
                     },
                     methods:{
                         addThisTodo: function(){
                             let toChange = {
-                                id:this.toEdit.id,
+                                id:this.toedit.id,
                                 name:this.nameTodo,
                                 description:this.descriptionTodo,
                                 date:this.dateTodo,
-                                showIt:this.toEdit.showIt
+                                showIt:this.toedit.showIt
                             };
-                            this.todos[this.editingPos] = Object.assign({},toChange);
+                            this.todos[this.editingpos] = Object.assign({},toChange);
                             this.nameTodo = '';
                             this.descriptionTodo = '';
                             this.dateTodo = '';
@@ -372,41 +408,11 @@
                             this.$emit('close');
                         }
                     },
-                    props:['todos','editingPos','toEdit']
+                    props:['todos','editingpos','toedit']
                 })
 
                 Vue.component('todo-detail', {
-                    template: '\
-                        <li class="ItemList">\
-                            <div class="Columna">\
-                                <p class="TitleTodo">TITULO: {{ name }}</p>\
-                                <p class="DateTodo">FECHA: {{ date }}</p>\
-                                <div v-on:click="$emit(\'delete\') class="Btn">\
-                                    <i class="material-icons md-36">\
-                                        clear\
-                                    </i>\
-                                </div>\
-                                <div v-on:click="$emit(\'edit\')" class="Btn">\
-                                    <i class="material-icons md-36">\
-                                        create\
-                                    </i>\
-                                </div>\
-                                <div v-on:click="$emit(\'show\')" class="Btn">\
-                                    <i v-if="showit == false" class="material-icons md-36">\
-                                        visibility\
-                                    </i>\
-                                    <i v-if="showit == true" class="material-icons md-36">\
-                                        visibility_off\
-                                    </i>\
-                                </div>\
-                            </div>\
-                            <div class="Columna">\
-                                <div v-if="showit == true" class="Alert">\
-                                    {{ description }}\
-                                </div>\
-                            </div>\
-                        </li>\
-                    ',
+                    template: '#item-template',
                     props: ['name','date','showit','description']
                 })
 
@@ -419,9 +425,9 @@
                         editingPos:-1,
                         toEdit:{}
                     },
-                    computed: {
-                        calculateTransformacion:function () {
-                            
+                    computed:{
+                        updatedCount:function(){
+                            this.countTodos = this.todos.length;
                         }
                     },
                     methods:{
