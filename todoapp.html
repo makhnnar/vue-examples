@@ -15,13 +15,13 @@
                 .Row{
                     display:flex;
                     flex:1;
-                    flex-direction:column;
+                    flex-direction:row;
                     margin:4px;
                 }
                 .Columna{
                     display:flex;
                     flex:1;
-                    flex-direction:row;
+                    flex-direction:column;
                     margin:4px;
                 }
                 .Btn{
@@ -30,13 +30,7 @@
                     justify-content:center;
                     margin:4px;
                     border-radius:10px;
-                }
-                .BtnIcon{
-                    display:flex;
-                    flex:1;
-                    justify-content:center;
-                    margin:4px;
-                    
+                    cursor: pointer;
                 }
                 .float{
                     cursor: pointer;
@@ -172,53 +166,64 @@
 
                 <div class="Columna">
 
-                    <div v-if="todos.length>0" class="List">
+                    <div class="Row">
                         
-                        <todo-detail 
-                            v-for="(todo, index) in todos"
-                            v-bind:key="todo.id"
-                            v-bind:name="todo.name"
-                            v-bind:description="todo.description"
-                            v-bind:date="todo.date"
-                            v-bind:showit="todo.showIt"
-                            v-on:remove="todos.splice(index, 1)"
-                            v-on:show="showDetail(index)"
-                            @edit="editTodo(index)"
-                            @delete="deleteTodo(index)"
-                        />
+                        <div class="Columna">
+                        
+                            <todo-detail 
+                                v-for="(todo, index) in todos"
+                                v-bind:key="todo.id"
+                                v-bind:name="todo.name"
+                                v-bind:description="todo.description"
+                                v-bind:date="todo.date"
+                                v-bind:showit="todo.showit"
+                                v-on:remove="todos.splice(index, 1)"
+                                v-on:show="showThisDetail(index)"
+                                @edit="editTodo(index)"
+                                @delete="deleteTodo(index)"
+                            />
+    
+                        </div>
+    
+                        <div class="Columna">
+                            <p>
+                                {{showThis}}
+                            </p>
+                        </div>
 
                     </div>
 
-                    <div v-if="todos.length === 0" class="Columna">
+                    <div v-if="todos.length === 0" class="Row">
                         <p>
                             No hay actividades planificadas. Agregue una por favor
                         </p>
                     </div>
 
-                </div>
+                    <div class="Row">
 
-                <div class="Columna">
-
-                    <div 
-                        v-on:click="openAddTodo" 
-                        class="float">
-                        <i class="material-icons my-float">
-                            add
-                        </i>
+                        <div 
+                            v-on:click="openAddTodo" 
+                            class="float">
+                            <i class="material-icons my-float">
+                                add
+                            </i>
+                        </div>
+    
                     </div>
 
                 </div>
-                
+
                 <template>
               
                     <modal 
                         v-if="showAddTodo"
                         :todos="todos"
                         :counttodos="countTodos"
+                        :editar="false"
                         @close="closeAddTodo()"/>
     
                 </template>
-
+    
                 <template>
               
                     <todo-edit 
@@ -226,6 +231,7 @@
                         :todos="todos"
                         :editingpos="editingPos"
                         :toedit="toEdit"
+                        :editar="true"
                         @close="closeAddTodo()"/>
     
                 </template>
@@ -235,7 +241,7 @@
             <script type="text/x-template" id="item-template">
       
                 <div class="ItemList">
-                    <div class="Columna">
+                    <div class="Row">
                         <p class="TitleTodo">TITULO: {{ name }}</p>
                         <p class="DateTodo">FECHA: {{ date }}</p>
                         <div v-on:click="$emit('delete')" class="Btn">
@@ -257,7 +263,7 @@
                             </i>
                         </div>
                     </div>
-                    <div class="Columna">
+                    <div class="Row">
                         <div v-if="showit === true" class="Alert">
                             {{ description }}
                         </div>
@@ -282,7 +288,7 @@
           
                                 <div class="modal-body">
 
-                                    <div class="Columna">
+                                    <div class="Row">
             
                                         <input 
                                             type="text" 
@@ -300,7 +306,7 @@
                         
                                     </div>
                     
-                                    <div class="Columna">
+                                    <div class="Row">
                     
                                         <textarea
                                             rows="10" 
@@ -317,12 +323,12 @@
           
                                 <div class="modal-footer">
                                     
-                                    <div class="Columna">
+                                    <div class="Row">
 
                                         <button 
                                             v-on:click="addThisTodo" 
                                             class="Btn">
-                                            Agregar
+                                            {{editar?'Guardar':'Agregar'}}
                                         </button>
                     
                                         <button 
@@ -365,7 +371,7 @@
                                 name:this.nameTodo,
                                 description:this.descriptionTodo,
                                 date:this.dateTodo,
-                                showIt:false
+                                showit:false
                             });
                             this.nameTodo = '';
                             this.descriptionTodo = '';
@@ -377,7 +383,7 @@
                             this.$emit('close');
                         }
                     },
-                    props:['todos','counttodos']
+                    props:['todos','counttodos','editar']
                 })
 
                 Vue.component('todo-edit', {
@@ -396,7 +402,7 @@
                                 name:this.nameTodo,
                                 description:this.descriptionTodo,
                                 date:this.dateTodo,
-                                showIt:this.toedit.showIt
+                                showit:this.toedit.showit
                             };
                             this.todos[this.editingpos] = Object.assign({},toChange);
                             this.nameTodo = '';
@@ -408,7 +414,7 @@
                             this.$emit('close');
                         }
                     },
-                    props:['todos','editingpos','toedit']
+                    props:['todos','editingpos','toedit','editar']
                 })
 
                 Vue.component('todo-detail', {
@@ -423,7 +429,8 @@
                         todos: [],
                         countTodos:0,
                         editingPos:-1,
-                        toEdit:{}
+                        toEdit:{},
+                        showThis:''
                     },
                     computed:{
                         updatedCount:function(){
@@ -438,14 +445,19 @@
                             this.todos.splice(pos, 1);
                         },
                         editTodo:function(pos){
-                            console.log("EDITANDO");
                             this.editingPos = pos;
                             console.log(this.todos[pos]);
                             this.toEdit = Object.assign({},this.todos[pos]);
                             console.log(this.toEdit);
                         },
                         showDetail:function(pos){
-                            this.todos[pos].showIt = !this.todos[pos].showIt;
+                            console.log("Mostrar pos: "+pos);
+                            console.log("this.todos["+pos+"]: "+JSON.stringify(this.todos[pos]));
+                            this.todos[pos].showit = !this.todos[pos].showit;
+                            console.log("this.todos["+pos+"]: "+JSON.stringify(this.todos[pos]));
+                        },
+                        showThisDetail:function(pos){
+                            this.showThis = this.todos[pos].description;
                         },
                         closeAddTodo:function(){
                             this.showAddTodo = false;
