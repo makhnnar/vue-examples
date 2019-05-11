@@ -96,19 +96,55 @@
                     justify-content:center;
                     align-items:center;
                     box-shadow: 2px 2px 3px #999;
-                    background-color:rgb(163, 187, 214);
+                    background-color:rgb(64, 189, 238);
                     margin:2px;
                 }
                 .List{
                     flex:1;
                 }
-                .TitleTodo{
-                    flex:1;
+                .Titles{
+                    display:flex;
+                    flex:2;
+                    flex-direction:row;
                     cursor: pointer;
                 }
-                .DateTodo{
+                .ColTitle{
+                    display:flex;
                     flex:1;
-                    cursor: pointer;
+                    flex-direction:column;
+                    margin:2px;
+                }
+                .TitleTodo{
+                    display:flex;
+                    flex:1;
+                    font-size: 16px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    max-width: 10ch;
+                }
+                .DateTodo{
+                    display:flex;
+                    flex:1;
+                    font-size: 16px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    max-width: 10ch;
+                }
+                .ContentTitleTodo{
+                    display:flex;
+                    flex:1;
+                    font-size: 12px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    max-width: 10ch;
+                }
+                .ContentDateTodo{
+                    display:flex;
+                    flex:1;
+                    font-size: 12px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    max-width: 10ch;
                 }
                 .Alert{
                     display:flex;
@@ -274,10 +310,18 @@
 
             <script type="text/x-template" id="item-template">
       
-                <div v-bind:class="[showit?indone:idone]">
+                <div v-bind:class="[showit?idone:indone]">
                     <div class="Row">
-                        <p v-on:click="$emit('show')" class="TitleTodo">TITULO: {{ name }}</p>
-                        <p v-on:click="$emit('show')" class="DateTodo">FECHA: {{ date }}</p>
+                        <div v-on:click="$emit('show')" class="Titles">
+                            <div class="ColTitle">
+                                <p class="TitleTodo">TITULO:</p>
+                                <p class="ContentTitleTodo">{{ name }}</p>
+                            </div>
+                            <div class="ColTitle">
+                                <p class="DateTodo">FECHA:</p>
+                                <p class="ContentDateTodo">{{ date }}</p>
+                            </div>
+                        </div>
                         <div v-on:click="$emit('delete')" class="Btn">
                             <i class="material-icons md-36">
                                 delete_outline
@@ -290,10 +334,10 @@
                         </div>
                         <div v-on:click="$emit('done')" class="Btn">
                             <i v-if="showit === false" class="material-icons md-36">
-                                check_circle
+                                check_circle_outline
                             </i>
                             <i v-if="showit === true" class="material-icons md-36">
-                                check_circle_outline
+                                check_circle
                             </i>
                         </div>
                     </div>
@@ -468,7 +512,7 @@
                                 name:'TODO 2',
                                 description:'DESCRIPCION 2',
                                 date:'2019-05-20',
-                                showit:false
+                                showit:true
                             },
                             {
                                 id:3,
@@ -481,7 +525,7 @@
                         countTodos:0,
                         editingPos:-1,
                         toEdit:{},
-                        showThis:'',
+                        showThis:'DESCRIPCION 1',
                         itemNotDone: 'ItemList',
                         itemDone: 'ItemListDone'
                     },
