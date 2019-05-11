@@ -28,6 +28,7 @@
                     display:flex;
                     flex:1;
                     justify-content:center;
+                    align-items:center;
                     margin:4px;
                     border-radius:10px;
                     cursor: pointer;
@@ -73,6 +74,21 @@
                 }
                 .ItemList{
                     flex:1;
+                    box-shadow: 2px 2px 3px #999;
+                    background-color:rgb(18, 113, 221);
+                    margin:2px;
+                }
+                .ItemList:hover{
+                    background-color:rgb(59, 139, 231);
+                }
+                .Content{
+                    flex:2;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    box-shadow: 2px 2px 3px #999;
+                    background-color:rgb(163, 187, 214);
+                    margin:2px;
                 }
                 .List{
                     flex:1;
@@ -185,7 +201,7 @@
     
                         </div>
     
-                        <div class="Columna">
+                        <div class="Content">
                             <p>
                                 {{showThis}}
                             </p>
@@ -242,8 +258,8 @@
       
                 <div class="ItemList">
                     <div class="Row">
-                        <p class="TitleTodo">TITULO: {{ name }}</p>
-                        <p class="DateTodo">FECHA: {{ date }}</p>
+                        <p v-on:click="$emit('show')" class="TitleTodo">TITULO: {{ name }}</p>
+                        <p v-on:click="$emit('show')" class="DateTodo">FECHA: {{ date }}</p>
                         <div v-on:click="$emit('delete')" class="Btn">
                             <i class="material-icons md-36">
                                 clear
@@ -254,7 +270,7 @@
                                 create
                             </i>
                         </div>
-                        <div v-on:click="$emit('show')" class="Btn">
+                        <div class="Btn">
                             <i v-if="showit === false" class="material-icons md-36">
                                 visibility
                             </i>
@@ -426,7 +442,29 @@
                     el: "#app",
                     data: {
                         showAddTodo:false,
-                        todos: [],
+                        todos: [
+                            {
+                                id:1,
+                                name:'TODO 1',
+                                description:'DESCRIPCION 1',
+                                date:'2019-05-20',
+                                showit:false
+                            },
+                            {
+                                id:2,
+                                name:'TODO 2',
+                                description:'DESCRIPCION 2',
+                                date:'2019-05-20',
+                                showit:false
+                            },
+                            {
+                                id:3,
+                                name:'TODO 3',
+                                description:'DESCRIPCION 3',
+                                date:'2019-05-20',
+                                showit:false
+                            }
+                        ],
                         countTodos:0,
                         editingPos:-1,
                         toEdit:{},
