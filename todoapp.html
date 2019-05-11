@@ -81,6 +81,15 @@
                 .ItemList:hover{
                     background-color:rgb(59, 139, 231);
                 }
+                .ItemListDone{
+                    flex:1;
+                    box-shadow: 2px 2px 3px #999;
+                    background-color:rgb(79, 18, 221);
+                    margin:2px;
+                }
+                .ItemListDone:hover{
+                    background-color:rgb(85, 59, 231);
+                }
                 .Content{
                     flex:2;
                     display:flex;
@@ -95,9 +104,11 @@
                 }
                 .TitleTodo{
                     flex:1;
+                    cursor: pointer;
                 }
                 .DateTodo{
                     flex:1;
+                    cursor: pointer;
                 }
                 .Alert{
                     display:flex;
@@ -108,6 +119,10 @@
                 }
                 .material-icons.md-36{
                     font-size: 36px;
+                    color:rgb(53, 58, 65);
+                }
+                .material-icons.md-36:hover{
+                    color:rgb(215, 223, 233);
                 }
                 .Result{
                     display:flex;
@@ -193,8 +208,11 @@
                                 v-bind:description="todo.description"
                                 v-bind:date="todo.date"
                                 v-bind:showit="todo.showit"
+                                v-bind:indone="itemNotDone"
+                                v-bind:idone="itemDone"
                                 v-on:remove="todos.splice(index, 1)"
                                 v-on:show="showThisDetail(index)"
+                                v-on:done="doneDetail(index)"
                                 @edit="editTodo(index)"
                                 @delete="deleteTodo(index)"
                             />
@@ -256,13 +274,13 @@
 
             <script type="text/x-template" id="item-template">
       
-                <div class="ItemList">
+                <div v-bind:class="[showit?indone:idone]">
                     <div class="Row">
                         <p v-on:click="$emit('show')" class="TitleTodo">TITULO: {{ name }}</p>
                         <p v-on:click="$emit('show')" class="DateTodo">FECHA: {{ date }}</p>
                         <div v-on:click="$emit('delete')" class="Btn">
                             <i class="material-icons md-36">
-                                clear
+                                delete_outline
                             </i>
                         </div>
                         <div v-on:click="$emit('edit')" class="Btn">
@@ -270,18 +288,13 @@
                                 create
                             </i>
                         </div>
-                        <div class="Btn">
+                        <div v-on:click="$emit('done')" class="Btn">
                             <i v-if="showit === false" class="material-icons md-36">
-                                visibility
+                                check_circle
                             </i>
                             <i v-if="showit === true" class="material-icons md-36">
-                                visibility_off
+                                check_circle_outline
                             </i>
-                        </div>
-                    </div>
-                    <div class="Row">
-                        <div v-if="showit === true" class="Alert">
-                            {{ description }}
                         </div>
                     </div>
                 </div>
@@ -435,7 +448,7 @@
 
                 Vue.component('todo-detail', {
                     template: '#item-template',
-                    props: ['name','date','showit','description']
+                    props: ['name','date','showit','description','indone','idone']
                 })
 
                 new Vue({
@@ -468,7 +481,9 @@
                         countTodos:0,
                         editingPos:-1,
                         toEdit:{},
-                        showThis:''
+                        showThis:'',
+                        itemNotDone: 'ItemList',
+                        itemDone: 'ItemListDone'
                     },
                     computed:{
                         updatedCount:function(){
@@ -488,11 +503,8 @@
                             this.toEdit = Object.assign({},this.todos[pos]);
                             console.log(this.toEdit);
                         },
-                        showDetail:function(pos){
-                            console.log("Mostrar pos: "+pos);
-                            console.log("this.todos["+pos+"]: "+JSON.stringify(this.todos[pos]));
+                        doneDetail:function(pos){
                             this.todos[pos].showit = !this.todos[pos].showit;
-                            console.log("this.todos["+pos+"]: "+JSON.stringify(this.todos[pos]));
                         },
                         showThisDetail:function(pos){
                             this.showThis = this.todos[pos].description;
