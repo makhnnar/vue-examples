@@ -24,6 +24,19 @@
                     flex-direction:column;
                     margin:4px;
                 }
+                .Columna0{
+                    flex:0;
+                    display:flex;
+                }
+                .Content{
+                    display:flex;
+                    flex:2;
+                    justify-content:center;
+                    align-items:center;
+                    box-shadow: 2px 2px 3px #999;
+                    background-color:#69a143;
+                    margin:2px;
+                }
                 .Btn{
                     display:flex;
                     flex:1;
@@ -109,15 +122,6 @@
                 }
                 .ItemListDone:hover{
                     background-color:#587045;
-                }
-                .Content{
-                    flex:2;
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    box-shadow: 2px 2px 3px #999;
-                    background-color:#69a143;
-                    margin:2px;
                 }
                 .List{
                     flex:1;
@@ -257,7 +261,7 @@
 
                     <div class="Row">
                         
-                        <div class="Columna">
+                        <div v-bind:class="{classList}">
                         
                             <todo-detail 
                                 v-for="(todo, index) in todos"
@@ -312,7 +316,7 @@
     
                 <template>
               
-                    <todo-edit 
+                    <todoedit 
                         v-if="editingPos>=0"
                         :todos="todos"
                         :editingpos="editingPos"
@@ -475,7 +479,7 @@
                     props:['todos','counttodos','editar']
                 })
 
-                Vue.component('todo-edit', {
+                Vue.component('todoedit', {
                     template: '#modal-template',
                     data: function() {
                         return{
@@ -554,6 +558,13 @@
                                 return this.todos[this.showThis].description;
                             }else{
                                 return 'No hay tareas programadas. Agregue alguna'
+                            }
+                        },
+                        classList:function(){
+                            if(this.todos.length>0){
+                                return 'Columna';
+                            }else{
+                                return 'Columna0';
                             }
                         }
                     },
