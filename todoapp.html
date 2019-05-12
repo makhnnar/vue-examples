@@ -33,6 +33,21 @@
                     border-radius:10px;
                     cursor: pointer;
                 }
+                .BtnModal{
+                    display:flex;
+                    flex:1;
+                    justify-content:center;
+                    align-items:center;
+                    box-shadow: 2px 2px 3px #999;
+                    margin:4px;
+                    cursor: pointer;
+                    background-color:#69a143;
+                    height:40px;
+                    color:#FFF;
+                }
+                .BtnModal:hover{
+                    background-color:#bae68e;
+                }
                 .float{
                     cursor: pointer;
                     position:fixed;
@@ -75,20 +90,20 @@
                 .ItemList{
                     flex:1;
                     box-shadow: 2px 2px 3px #999;
-                    background-color:rgb(18, 113, 221);
+                    background-color:#69a143;
                     margin:2px;
                 }
                 .ItemList:hover{
-                    background-color:rgb(59, 139, 231);
+                    background-color:#bae68e;
                 }
                 .ItemListDone{
                     flex:1;
                     box-shadow: 2px 2px 3px #999;
-                    background-color:rgb(79, 18, 221);
+                    background-color:#4e7531;
                     margin:2px;
                 }
                 .ItemListDone:hover{
-                    background-color:rgb(85, 59, 231);
+                    background-color:#587045;
                 }
                 .Content{
                     flex:2;
@@ -96,7 +111,7 @@
                     justify-content:center;
                     align-items:center;
                     box-shadow: 2px 2px 3px #999;
-                    background-color:rgb(64, 189, 238);
+                    background-color:#51a5ff;
                     margin:2px;
                 }
                 .List{
@@ -121,6 +136,7 @@
                     overflow: hidden;
                     white-space: nowrap;
                     max-width: 10ch;
+                    color: #ffffff;
                 }
                 .DateTodo{
                     display:flex;
@@ -129,6 +145,7 @@
                     overflow: hidden;
                     white-space: nowrap;
                     max-width: 10ch;
+                    color: #ffffff;
                 }
                 .ContentTitleTodo{
                     display:flex;
@@ -137,6 +154,7 @@
                     overflow: hidden;
                     white-space: nowrap;
                     max-width: 10ch;
+                    color:#ffffff;
                 }
                 .ContentDateTodo{
                     display:flex;
@@ -145,6 +163,7 @@
                     overflow: hidden;
                     white-space: nowrap;
                     max-width: 10ch;
+                    color:#ffffff;
                 }
                 .Alert{
                     display:flex;
@@ -155,10 +174,10 @@
                 }
                 .material-icons.md-36{
                     font-size: 36px;
-                    color:rgb(53, 58, 65);
+                    color:#ffffff;
                 }
                 .material-icons.md-36:hover{
-                    color:rgb(215, 223, 233);
+                    color:#3f3e3e;
                 }
                 .Result{
                     display:flex;
@@ -189,7 +208,7 @@
                     width: 600px;
                     margin: 0px auto;
                     padding: 20px 30px;
-                    background-color: #fff;
+                    background-color: #9b76ff;
                     border-radius: 2px;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
                     transition: all .3s ease;
@@ -400,13 +419,13 @@
 
                                         <button 
                                             v-on:click="addThisTodo" 
-                                            class="Btn">
+                                            class="BtnModal">
                                             {{editar?'Guardar':'Agregar'}}
                                         </button>
                     
                                         <button 
                                             v-on:click="closeModal" 
-                                            class="Btn">
+                                            class="BtnModal">
                                             Cerrar
                                         </button>
                     
