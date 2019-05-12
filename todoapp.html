@@ -30,7 +30,6 @@
                     justify-content:center;
                     align-items:center;
                     margin:4px;
-                    border-radius:10px;
                     cursor: pointer;
                 }
                 .BtnModal{
@@ -38,7 +37,10 @@
                     flex:1;
                     justify-content:center;
                     align-items:center;
-                    box-shadow: 2px 2px 3px #999;
+                    color:#000000;
+                    border:solid;
+                    border-width: 1px;
+                    box-shadow: 2px 2px 3px #4e7531;
                     margin:4px;
                     cursor: pointer;
                     background-color:#69a143;
@@ -55,14 +57,15 @@
                     height:60px;
                     bottom:40px;
                     right:40px;
-                    background-color:#0C9;
+                    background-color:#587045;
                     color:#FFF;
                     border-radius:50px;
                     text-align:center;
-                    box-shadow: 2px 2px 3px #999;
+                    box-shadow: 2px 2px 3px #69a143;
                 }
                 .float:hover{
-                    background-color:rgb(72, 228, 189);
+                    color:#587045;
+                    background-color:#bae68e;
                 }
                 .my-float{
                     margin-top:18px;
@@ -74,18 +77,20 @@
                     flex:1;
                     color:#000000;
                     border:solid;
-                    border-radius:10px;
                     height: 40px;
                     margin:10px;
                     text-align: center;
+                    border-width: 1px;
+                    box-shadow: 3px 3px 4px #4e7531;
                 }
                 .Area{
                     flex:1;
                     color:#000000;
                     border:solid;
-                    border-radius:10px;
+                    border-width: 1px;
                     height: 100px;
                     margin:10px;
+                    box-shadow: 3px 3px 4px #4e7531;
                 }
                 .ItemList{
                     flex:1;
@@ -111,7 +116,7 @@
                     justify-content:center;
                     align-items:center;
                     box-shadow: 2px 2px 3px #999;
-                    background-color:#51a5ff;
+                    background-color:#69a143;
                     margin:2px;
                 }
                 .List{
@@ -187,7 +192,6 @@
                     background: #8bf188;
                     flex-direction: column;
                     align-items:center;
-                    border-radius:10px;
                 }
                 .modal-mask {
                     position: fixed;
@@ -208,7 +212,7 @@
                     width: 600px;
                     margin: 0px auto;
                     padding: 20px 30px;
-                    background-color: #9b76ff;
+                    background-color: #69a143;
                     border-radius: 2px;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
                     transition: all .3s ease;
@@ -216,7 +220,6 @@
                 }
                 .modal-header h3 {
                     margin-top: 0;
-                    color: #42b983;
                 }
                 .modal-body {
                     margin: 20px 0;
@@ -276,16 +279,10 @@
     
                         <div class="Content">
                             <p>
-                                {{showThis}}
+                                {{lastDescription}}
                             </p>
                         </div>
 
-                    </div>
-
-                    <div v-if="todos.length === 0" class="Row">
-                        <p>
-                            No hay actividades planificadas. Agregue una por favor
-                        </p>
                     </div>
 
                     <div class="Row">
@@ -544,13 +541,20 @@
                         countTodos:0,
                         editingPos:-1,
                         toEdit:{},
-                        showThis:'DESCRIPCION 1',
+                        showThis:0,
                         itemNotDone: 'ItemList',
                         itemDone: 'ItemListDone'
                     },
                     computed:{
-                        updatedCount:function(){
-                            this.countTodos = this.todos.length;
+                        lastDescription:function(){
+                            if(this.showThis>=this.todos.length){
+                                this.showThis = 0;
+                            }
+                            if(this.todos.length>0 && this.showThis<this.todos.length){
+                                return this.todos[this.showThis].description;
+                            }else{
+                                return 'No hay tareas programadas. Agregue alguna'
+                            }
                         }
                     },
                     methods:{
@@ -570,7 +574,7 @@
                             this.todos[pos].showit = !this.todos[pos].showit;
                         },
                         showThisDetail:function(pos){
-                            this.showThis = this.todos[pos].description;
+                            this.showThis = pos;
                         },
                         closeAddTodo:function(){
                             this.showAddTodo = false;
